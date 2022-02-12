@@ -16,14 +16,14 @@ export default function Navbar() {
 
   return (
     <nav className="w-full flex md:justify-center justify-between items-center p-4">
-      <div className="md:flex-[0.5] flex-initial justify-center items-center">
+      <div className="md:flex-[0.5] flex-initial justify-center items-center ">
         <img src={Logo} alt="logo" className="w-32 cursor-pointer" />
       </div>
       <ul className="text-white md:flex hidden list-none flex-row justify-center flex-initial">
         {NavbarItemTitle.map((title, index) => (
-          <NavbarItem key={title + index} title={title} />
+          <NavbarItem key={title + index} title={title} classProps="m-2 hover:text-sky-400 duration-300" />
         ))}
-        <li className="bg-[#2952e3] py-2 px-7 mx-4 rounded-full cursor-pointer hover:bg-[#2546bd]">
+        <li className="bg-[#2952e3] py-2 px-7 mx-4 rounded-full cursor-pointer hover:bg-[#2546bd] duration-300">
           Login
         </li>
       </ul>
