@@ -1,15 +1,18 @@
 import { HiMenuAlt4 } from "react-icons/hi";
 import { AiOutlineClose } from "react-icons/ai";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import Logo from "../images/logo.png";
 
 export default function Navbar() {
+  const ref = useRef();
   const [toggleMenu, setToggleMenu] = useState(false);
   const NavbarItemTitle = ["Mercados", "Trocas", "Tutoriais", "Carteiras"];
   const NavbarItem = ({ title, classProps }) => {
     return <li className={`mx-4 cursor-pointer ${classProps}`}>{title}</li>;
   };
+
+  useOnClickOutside(ref, () => setToggleMenu(false));
 
   return (
     <nav className="w-full flex md:justify-center justify-between items-center p-4">
@@ -39,7 +42,7 @@ export default function Navbar() {
           />
         )}
         {toggleMenu && (
-          <ul className="z-10 fixed top-0 -right-2 p-3 w-[70vw] h-screen shadow-2x1 md:hidden list-none flex flex-col justify-start items-end rounded-md blue-glassmorphism text-white slide-right">
+          <ul ref={ref} className="z-10 fixed top-0 -right-2 p-3 w-[70vw] h-screen shadow-2x1 md:hidden list-none flex flex-col justify-start items-end rounded-md blue-glassmorphism text-white slide-right">
             <li className="text-x1 w-full my-2 cursor-pointer">
               <AiOutlineClose onClick={() => setToggleMenu(false)} />
             </li>
@@ -54,5 +57,33 @@ export default function Navbar() {
         )}
       </div>
     </nav>
+  );
+}
+
+// Hook
+function useOnClickOutside(ref, handler) {
+  useEffect(
+    () => {
+      const listener = (event) => {
+        // Do nothing if clicking ref's element or descendent elements
+        if (!ref.current || ref.current.contains(event.target)) {
+          return;
+        }
+        handler(event);
+      };
+      document.addEventListener("mousedown", listener);
+      document.addEventListener("touchstart", listener);
+      return () => {
+        document.removeEventListener("mousedown", listener);
+        document.removeEventListener("touchstart", listener);
+      };
+    },
+    // Add ref and handler to effect dependencies
+    // It's worth noting that because passed in handler is a new ...
+    // ... function on every render that will cause this effect ...
+    // ... callback/cleanup to run every render. It's not a big deal ...
+    // ... but to optimize you can wrap handler in useCallback before ...
+    // ... passing it into this hook.
+    [ref, handler]
   );
 }
